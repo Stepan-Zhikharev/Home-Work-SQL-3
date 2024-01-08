@@ -74,7 +74,7 @@ def find_client(conn, first_name=None, last_name=None, email=None, phones=None):
         cur.execute("""
             SELECT c.id, c.first_name, c.last_name, c.email, cp.phones FROM clients c
             JOIN clients_phones cp ON c.id = cp.clients_id
-            WHERE first_name=%s AND first_name=%s IS NOT NULL OR last_name=%s AND last_name=%s IS NOT NULL OR email=%s AND email=%s IS NOT NULL OR phones=%s AND phones=%s IS NOT NULL;
+            WHERE (first_name=%s OR first_name=%s IS NULL) AND (last_name=%s OR last_name=%s IS NULL) AND (email=%s OR email=%s IS NULL) AND (phones=%s OR phones=%s IS NULL);
         """, (first_name, first_name, last_name, last_name, email, email, phones, phones))
         return cur.fetchone()
 if __name__ == "__main__":
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         add_phone(conn, 2, 123)
         change_client(conn, 2, 'ji')
         delete_phone(conn, 1, 12345)
-        delete_client(conn, 1)
-        print(find_client(conn, phones=123))
+        #delete_client(conn, 1)
+        print(find_client(conn, last_name='wd'))
 
     conn.close()
